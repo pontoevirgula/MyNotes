@@ -30,6 +30,7 @@ class DatabaseTest {
     @After
     fun closeDB(){
         myDB?.close()
+        Log.i(JUNIT,"Banco de dados fechado")
     }
 
     @Test
@@ -38,6 +39,14 @@ class DatabaseTest {
         val count = myDAO?.getCount()
         Log.i(JUNIT,"createAndRetrieveNotes: count=$count")
         assertEquals(NoteUtil.getNotes().size,count)
+    }
+
+    @Test
+    fun compareStrings(){
+        myDAO?.insertAll(NoteUtil.getNotes())
+        val original = NoteUtil.getNotes()[0]
+        val fromDB = myDAO?.getNoteId(1)
+        assertEquals(original.text,fromDB?.text)
     }
 
     companion object{
