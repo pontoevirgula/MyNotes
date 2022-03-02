@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         noteList.addAll(NoteUtil.getNotes())
         for(note in noteList){
-            Log.i("ANOTAÇÃO",note.toString())
+            Log.i(NOTE,note.toString())
         }
         initRecyclerView()
     }
@@ -87,5 +87,9 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         _binding = null
         _bindingRecycler = null
+    }
+
+    companion object{
+        private const val NOTE = "ANOTAÇÃO"
     }
 }
