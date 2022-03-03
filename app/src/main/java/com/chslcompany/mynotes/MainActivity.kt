@@ -6,15 +6,18 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chslcompany.mynotes.database.NoteEntity
 import com.chslcompany.mynotes.databinding.ActivityMainBinding
 import com.chslcompany.mynotes.databinding.ContentMainBinding
-import com.chslcompany.mynotes.database.NoteEntity
-import com.chslcompany.mynotes.util.NoteUtil
+import com.chslcompany.mynotes.repository.NoteRepositoryImpl
+import com.chslcompany.mynotes.util.ViewModelFactory
+import com.chslcompany.mynotes.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var linearLayoutManager : LinearLayoutManager
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private lateinit var mainViewModel: MainViewModel
 
     private val noteList : MutableList<NoteEntity> = mutableListOf()
 
@@ -48,11 +53,18 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,EditorActivity::class.java))
         }
 
-        noteList.addAll(NoteUtil.getNotes())
+        initViewModel()
+
+        initRecyclerView()
+    }
+
+    private fun initViewModel() {
+        mainViewModel =  ViewModelProvider(this,
+            ViewModelFactory(NoteRepositoryImpl()))[MainViewModel::class.java]
+        noteList.addAll(mainViewModel.getNotesViewModel())
         for(note in noteList){
             Log.i(NOTE,note.toString())
         }
-        initRecyclerView()
     }
 
     private fun initRecyclerView(){
